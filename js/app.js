@@ -22,15 +22,27 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    // If the enemy is offscreen to the right, reset its 
+    // If the enemy is offscreen to the right, reset its
     // location to a random row on the left and assign a
     //  random speed.
-    if (this.x >= 606) {
+    if (this.x >= numRows * tileWidth) {
         this.initialLocation();
         this.setEnemySpeed();
     }
     // Move the enemy to the right at its assigned speed.
     this.x += this.speed * dt;
+
+    if (this.collidedWithPlayer()) {
+        console.log(`Player collision\nEnemy: (${this.x}, ${this.y})\nPlayer: (${player.x}, ${player.y})`);
+        player.initialLocation();
+        player.setPlayerSprite();
+    }
+};
+
+Enemy.prototype.collidedWithPlayer = function() {
+    return (this.y == player.y) &&
+        (this.x >= player.x - 0.75 * tileWidth) &&
+        (this.x <= player.x + 0.75 * tileWidth);
 };
 
 // Draw the enemy on the screen, required method for game
@@ -71,17 +83,10 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.update = function() {
-
-};
+Player.prototype.update = function() {};
 
 // Select player sprite randomly from a list of sprites.
 Player.prototype.setPlayerSprite = function() {
-    if (this.y <= 0) {
-        alert("You win!");
-        setTimeout(this.initialLocation(), 1000);
-    }
-
     this.sprite = this.spriteList[Math.floor(Math.random() * this.spriteList.length)];
 }
 
@@ -113,6 +118,15 @@ Player.prototype.handleInput = function(keyCode) {
                 this.x += tileWidth;
             }
             break;
+    }
+    // If win condition met...
+    if (this.y <= 0) {
+        // Render right away
+        this.render();
+        if (confirm("You win! Play again?")) {
+            this.initialLocation();
+            this.setPlayerSprite();
+        }
     }
 };
 // Now instantiate your objects.
