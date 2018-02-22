@@ -1,5 +1,7 @@
 var tileHeight = 80;
 var tileWidth = 101;
+var numCols = 5;
+var numRows = 6;
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -54,7 +56,14 @@ Enemy.prototype.setEnemySpeed = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    this.sprite = 'images/char-boy.png';
+    this.spriteList = ['images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png'
+    ];
+
+    this.setPlayerSprite();
     this.initialLocation();
 };
 
@@ -66,9 +75,45 @@ Player.prototype.update = function() {
 
 };
 
+// Select player sprite randomly from a list of sprites.
+Player.prototype.setPlayerSprite = function() {
+    if (this.y <= 0) {
+        alert("You win!");
+        setTimeout(this.initialLocation(), 1000);
+    }
+
+    this.sprite = this.spriteList[Math.floor(Math.random() * this.spriteList.length)];
+}
+
+// Player's initial position is in the middle of the bottom row
 Player.prototype.initialLocation = function() {
-    this.x = 2 * tileWidth;
-    this.y = 5 * tileHeight;
+    this.x = Math.floor(numCols / 2) * tileWidth;
+    this.y = numCols * tileHeight;
+};
+
+Player.prototype.handleInput = function(keyCode) {
+    switch (keyCode) {
+        case 'up':
+            if (this.y > 0) {
+                this.y -= tileHeight;
+            }
+            break;
+        case 'down':
+            if (this.y < numCols * tileHeight) {
+                this.y += tileHeight;
+            }
+            break;
+        case 'left':
+            if (this.x > 0) {
+                this.x -= tileWidth;
+            }
+            break;
+        case 'right':
+            if (this.x < ((numCols - 1) * tileWidth)) {
+                this.x += tileWidth;
+            }
+            break;
+    }
 };
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
