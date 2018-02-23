@@ -33,9 +33,11 @@ Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
 
     if (this.collidedWithPlayer()) {
-        console.log(`Player collision\nEnemy: (${this.x}, ${this.y})\nPlayer: (${player.x}, ${player.y})`);
-        player.initialLocation();
-        player.setPlayerSprite();
+        // Lose condition - reset player
+        // console.log(`Player collision\nEnemy: (${this.x}, ${this.y})\nPlayer: (${player.x}, ${player.y})`);
+        player.setupPlayer();
+        // Move star to a new location and make it visible again.
+        star.setStar();
     }
 };
 
@@ -75,8 +77,7 @@ var Player = function() {
         'images/char-princess-girl.png'
     ];
 
-    this.setPlayerSprite();
-    this.initialLocation();
+    this.setupPlayer();
 };
 
 Player.prototype.render = function() {
@@ -90,10 +91,12 @@ Player.prototype.setPlayerSprite = function() {
     this.sprite = this.spriteList[Math.floor(Math.random() * this.spriteList.length)];
 }
 
-// Player's initial position is in the middle of the bottom row
-Player.prototype.initialLocation = function() {
-    this.x = Math.floor(numCols / 2) * tileWidth;
-    this.y = numCols * tileHeight;
+Player.prototype.setupPlayer = function() {
+  // Player's initial position is in the middle of the bottom row
+  this.x = Math.floor(numCols / 2) * tileWidth;
+  this.y = numCols * tileHeight;
+  // Reset player sprite
+  this.setPlayerSprite();
 };
 
 Player.prototype.handleInput = function(keyCode) {
@@ -121,20 +124,46 @@ Player.prototype.handleInput = function(keyCode) {
     }
     // If win condition met...
     if (this.y <= 0) {
-        // Render right away
-        this.render();
-        if (confirm("You win! Play again?")) {
-            this.initialLocation();
-            this.setPlayerSprite();
+      var winMsg = "You Win!";
+      if(star.isVisible == false) winMsg += "\nYou got a Star! Congratulations!";
+      winMsg += "\nPlay again?";
+        if (confirm(winMsg)) {
+            this.setupPlayer();
+            // Move star to a new location and make it visible again.
+            star.setStar();
         }
     }
+    // If collision with Star
+    if((this.x == star.x) && (this.y == star.y)) {
+      // "Collect" star (make it disappear)
+      // No in-game effect of star. Something to add later.
+      star.isVisible = false;
+    }
 };
+
+var Star = function() {
+  this.sprite = "images/Star.png";
+  this.setStar();
+}
+Star.prototype.render = function() {
+  if(this.isVisible){
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
+};
+Star.prototype.setStar = function() {
+  this.x = Math.floor(Math.random() * numCols) * tileWidth;
+  // Star will not appear in top (water) or bottom (starting) row.
+  this.y = Math.floor((Math.random() * (numRows - 2)) + 1) * tileHeight;
+  this.isVisible = true;
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
 var allEnemies = [new Enemy(), new Enemy(), new Enemy(), new Enemy()];
 var player = new Player();
+var star = new Star();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
