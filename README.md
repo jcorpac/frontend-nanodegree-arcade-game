@@ -1,6 +1,31 @@
-frontend-nanodegree-arcade-game
-===============================
+# Arcade Game Project
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+## Table of Contents
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+* [Project Attribution](#attribution)
+* [Dependencies](#dependencies)
+* [Playing the Game](#playing-the-game)
+* [Running on a Local Server](#running-on-a-local-server)
+
+## Project Attribution
+
+This project is an extension of a [starter project](https://github.com/udacity/frontend-nanodegree-arcade-game) provided by Udacity, as part of their Front End Web Developer NanoDegree program. The starter project provided art assets and a game engine written in JavaScript. As a student, I used Object Oriented JavaScript to add Player, Enemy, and Star objects to the game, and created code for the objects to interact.
+
+Source code for this project is available at `https://github.com/jcorpac/frontend-nanodegree-arcade-game`
+
+## Dependencies
+
+This game runs in EC5 JavaScript, and all of the files for game logic and art assets are included in the repository's code.
+
+## Playing the Game
+
+The game is a clone of the popular arcade game "Frogger". The screen starts with a 5x6 tile grid. The top row consists of water tiles, rows 2-4 will have stone tiles, and rows 5 and 6 are "safe" grass tiles. Enemy bugs will scroll onto the left side of the stone tiles and move left-to-right. The player's goal is to move past the bugs and reach the water without getting hit.
+
+The player appears as a person on the center of the bottom row, and can be moved using the up, left, right, and down keys on the player's keyboard. There is also a star which appears in a random location on the board, and the player can collect by moving their character over it.
+
+If the player is touched by one of the bugs, they are returned to the starting tile, and their character is changed. If they had collected the star, then it is returned to a random location on the game board. If the player can get to the water without being hit, then they win the game and are given the option to play again.
+
+## Running on a Local Server
+This page is designed to run in any web browser with JavaScript enabled. As such, it can be run from a folder on your local machine, or from any web server. A recommended web server for your local machine is [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb?hl=en).
+
+If your computer has the Python interpreter installed on it, you can run the page by running the command line from the project folder and entering `python -m SimpleHTTPServer 8080`. The page with the portfolio will be available at `http://localhost:8080/`.
